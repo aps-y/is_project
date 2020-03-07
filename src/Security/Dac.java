@@ -11,7 +11,22 @@ public class Dac {
 		sql = new MysqlQueries();
 	}
 	
-	public boolean checkDac(String uid, String fid, int permission)
+	public boolean checkPermission(String uid, String fid, int permission)
+	{
+		if(fid.compareTo("0")==0)
+			return true;
+		if(checkDac(uid,fid,permission))
+		{
+			String parent = sql.getParent(fid);
+			if(checkPermission(uid, parent, permission))
+				return true;
+		}
+	
+		
+		return false;
+	}
+	
+	 boolean checkDac(String uid, String fid, int permission)
 	{
 		
 		String rights = sql.getDac(fid);
@@ -23,7 +38,7 @@ public class Dac {
 		{
 			String oct = rights.substring(0,1);
 			rgt = Integer.parseInt(oct);
-			if((rgt&permission) > 0)
+			if((rgt&permission) == permission)
 				return true;
 			else 
 				return false;
@@ -37,7 +52,7 @@ public class Dac {
 				{
 					String oct = rights.substring(1,2);
 					rgt = Integer.parseInt(oct);
-					if((rgt&permission) > 0)
+					if((rgt&permission) == permission)
 						return true;
 					else 
 						return false;
@@ -47,7 +62,7 @@ public class Dac {
 		
 		String oct = rights.substring(2,3);
 		rgt = Integer.parseInt(oct);
-		if((rgt&permission) > 0)
+		if((rgt&permission) == permission)
 			return true;
 		else 
 			return false;

@@ -41,6 +41,56 @@ INSERT INTO `dac` VALUES ('1','677');
 UNLOCK TABLES;
 
 --
+-- Table structure for table `domains`
+--
+
+DROP TABLE IF EXISTS `domains`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `domains` (
+  `did` varchar(6) NOT NULL,
+  `dname` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`did`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `domains`
+--
+
+LOCK TABLES `domains` WRITE;
+/*!40000 ALTER TABLE `domains` DISABLE KEYS */;
+INSERT INTO `domains` VALUES ('1','Dom1'),('2','Dom2'),('3','Dom3'),('4','Dom4'),('5','Dom5');
+/*!40000 ALTER TABLE `domains` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `file_domains`
+--
+
+DROP TABLE IF EXISTS `file_domains`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `file_domains` (
+  `fid` varchar(6) NOT NULL,
+  `did` varchar(6) NOT NULL,
+  PRIMARY KEY (`fid`,`did`),
+  KEY `did` (`did`),
+  CONSTRAINT `file_domains_ibfk_1` FOREIGN KEY (`fid`) REFERENCES `files_dir` (`fid`),
+  CONSTRAINT `file_domains_ibfk_2` FOREIGN KEY (`did`) REFERENCES `domains` (`did`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `file_domains`
+--
+
+LOCK TABLES `file_domains` WRITE;
+/*!40000 ALTER TABLE `file_domains` DISABLE KEYS */;
+/*!40000 ALTER TABLE `file_domains` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `files_dir`
 --
 
@@ -53,11 +103,17 @@ CREATE TABLE `files_dir` (
   `type` enum('f','d') DEFAULT NULL,
   `parent` varchar(6) DEFAULT NULL,
   `own` varchar(6) DEFAULT NULL,
+  `lvl_from` int(2) DEFAULT NULL,
+  `lvl_to` int(2) DEFAULT NULL,
   PRIMARY KEY (`fid`),
   KEY `fd_par_fk` (`parent`),
   KEY `fd_own_fk` (`own`),
+  KEY `lvl_from` (`lvl_from`),
+  KEY `lvl_to` (`lvl_to`),
   CONSTRAINT `fd_own_fk` FOREIGN KEY (`own`) REFERENCES `user` (`uid`),
-  CONSTRAINT `fd_par_fk` FOREIGN KEY (`parent`) REFERENCES `files_dir` (`fid`)
+  CONSTRAINT `fd_par_fk` FOREIGN KEY (`parent`) REFERENCES `files_dir` (`fid`),
+  CONSTRAINT `files_dir_ibfk_1` FOREIGN KEY (`lvl_from`) REFERENCES `levels` (`lid`),
+  CONSTRAINT `files_dir_ibfk_2` FOREIGN KEY (`lvl_to`) REFERENCES `levels` (`lid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -67,7 +123,7 @@ CREATE TABLE `files_dir` (
 
 LOCK TABLES `files_dir` WRITE;
 /*!40000 ALTER TABLE `files_dir` DISABLE KEYS */;
-INSERT INTO `files_dir` VALUES ('0','root','d','0','0'),('1','rde','f','0','1');
+INSERT INTO `files_dir` VALUES ('0','root','d','0','0',2,3),('1','rde','f','0','1',4,5);
 /*!40000 ALTER TABLE `files_dir` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,6 +148,30 @@ CREATE TABLE `groups` (
 LOCK TABLES `groups` WRITE;
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `levels`
+--
+
+DROP TABLE IF EXISTS `levels`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `levels` (
+  `lid` int(2) NOT NULL,
+  `lname` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`lid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `levels`
+--
+
+LOCK TABLES `levels` WRITE;
+/*!40000 ALTER TABLE `levels` DISABLE KEYS */;
+INSERT INTO `levels` VALUES (1,'Level1'),(2,'Level2'),(3,'Level3'),(4,'Level4'),(5,'Level5');
+/*!40000 ALTER TABLE `levels` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -127,7 +207,13 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `uid` varchar(6) NOT NULL,
   `uname` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`uid`)
+  `lvl_from` int(2) DEFAULT NULL,
+  `lvl_to` int(2) DEFAULT NULL,
+  PRIMARY KEY (`uid`),
+  KEY `lvl_from` (`lvl_from`),
+  KEY `lvl_to` (`lvl_to`),
+  CONSTRAINT `user_ibfk_1` FOREIGN KEY (`lvl_from`) REFERENCES `levels` (`lid`),
+  CONSTRAINT `user_ibfk_2` FOREIGN KEY (`lvl_to`) REFERENCES `levels` (`lid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -137,8 +223,35 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('0','dlkafj'),('1','fdad');
+INSERT INTO `user` VALUES ('0','dlkafj',4,5),('1','fdad',1,2);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_domains`
+--
+
+DROP TABLE IF EXISTS `user_domains`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_domains` (
+  `uid` varchar(6) NOT NULL,
+  `did` varchar(6) NOT NULL,
+  PRIMARY KEY (`uid`,`did`),
+  KEY `did` (`did`),
+  CONSTRAINT `user_domains_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user` (`uid`),
+  CONSTRAINT `user_domains_ibfk_2` FOREIGN KEY (`did`) REFERENCES `domains` (`did`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_domains`
+--
+
+LOCK TABLES `user_domains` WRITE;
+/*!40000 ALTER TABLE `user_domains` DISABLE KEYS */;
+INSERT INTO `user_domains` VALUES ('1','1'),('1','2');
+/*!40000 ALTER TABLE `user_domains` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -176,4 +289,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-03-07 21:48:49
+-- Dump completed on 2020-03-08  1:32:07
