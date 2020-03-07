@@ -1,13 +1,13 @@
 # IS_project
-## permissions 
+## PERMISSIONS 
 ### 4 - read 
 ### 2 - write 
 ### 1 - append 
 
-## domains 
+## DOMAINS 
 ### ids :- 1 to 5 
 ### names :- Dom1 to Dom5 
 
-## levels 
+## LEVELS 
 ### ids :- 1 to 5 
 ### names :- level1 to level5 
