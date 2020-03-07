@@ -1,13 +1,13 @@
 # IS_project
---permissions \n
-4 - read \n
-2 - write \n
-1 - append \n
+--permissions 
+4 - read 
+2 - write 
+1 - append 
 
---domains \n
-ids :- 1 to 5 \n
-names :- Dom1 to Dom5 \n
+--domains 
+ids :- 1 to 5 
+names :- Dom1 to Dom5 
 
---levels \n
-ids :- 1 to 5 \n
-names :- level1 to level5 \n
+--levels 
+ids :- 1 to 5 
+names :- level1 to level5 
