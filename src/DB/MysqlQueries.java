@@ -268,10 +268,11 @@ public class MysqlQueries {
 			
 			sql = "select fid, type from files_dir where parent='"+fid+"'";
 			ArrayList<String[]> list = new ArrayList<String[]>();
-			String[] tmp = new String[2];
+			
 			myResult = myStatement.executeQuery(sql);
 			while(myResult.next())
 			{
+				String[] tmp = new String[2];
 				tmp[0]= myResult.getString("fid");
 				tmp[1]= myResult.getString("type");
 				//System.out.println(tmp[0]+"  "+tmp[1]);
@@ -294,14 +295,14 @@ public class MysqlQueries {
 		return null;
 	}
 	
-//	public static void main(String[] args)
-//	{
-//		MysqlQueries mq = new MysqlQueries();
-//		ArrayList<String[]> val = mq.getChildren("0");
-//		System.out.println("------------");
-//		System.out.println(val.get(0)[0]+"  "+val.get(0)[1]);
-//		System.out.println(val.get(1)[0]+"  "+val.get(1)[1]);
-//	}
+	public static void main(String[] args)
+	{
+		MysqlQueries mq = new MysqlQueries();
+		ArrayList<String[]> val = mq.getChildren("0");
+		System.out.println("------------");
+		System.out.println(val.get(0)[0]+"  "+val.get(0)[1]);
+		System.out.println(val.get(1)[0]+"  "+val.get(1)[1]);
+	}
 	
 	
 }
