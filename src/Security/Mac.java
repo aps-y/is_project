@@ -1,5 +1,7 @@
 package Security;
 
+import java.util.ArrayList;
+
 import DB.MysqlQueries;
 
 public class Mac {
@@ -11,7 +13,7 @@ public class Mac {
 		sql = new MysqlQueries();
 	}
 	
-	boolean isSubset(String[] userDom, String[] fileDom)
+	boolean isSubset(ArrayList<String> userDom, ArrayList<String> fileDom)
 	{
 		int length=0;
 		
@@ -26,7 +28,7 @@ public class Mac {
 				}
 			}
 		}
-		if(length== fileDom.length)
+		if(length== fileDom.size())
 		return true;
 		
 		return false;
@@ -58,8 +60,8 @@ public class Mac {
 	{
 		int[] userLvl = sql.getUserLvl(uid);
 		int[] fileLvl = sql.getFileLvl(fid);
-		String[] userDom = sql.getUserDomain(uid);
-		String[] fileDom = sql.getFileDomain(fid);
+		ArrayList<String> userDom = sql.getUserDomain(uid);
+		ArrayList<String> fileDom = sql.getFileDomain(fid);
 		if(isSubset(userDom,fileDom))
 		{
 			int rgt = level_comparision(userLvl,fileLvl);

@@ -1,6 +1,8 @@
 package Security;
 
 import DB.MysqlQueries;
+import java.util.ArrayList;
+
 
 public class Dac {
 
@@ -30,9 +32,9 @@ public class Dac {
 	{
 		
 		String rights = sql.getDac(fid);
-		String[] groups = sql.getGroups(uid);
+		ArrayList<String> groups = sql.getGroups(uid);
 		String own = sql.getOwn(fid);
-		String[] groupOwn = sql.getGroups(own);
+		ArrayList<String> groupOwn = sql.getGroups(own);
 		int rgt=0;
 		if(uid.compareTo(own)==0)
 		{
