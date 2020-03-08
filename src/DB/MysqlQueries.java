@@ -274,12 +274,12 @@ public class MysqlQueries {
 			{
 				tmp[0]= myResult.getString("fid");
 				tmp[1]= myResult.getString("type");
-				System.out.println(tmp[0]+"  "+tmp[1]);
+				//System.out.println(tmp[0]+"  "+tmp[1]);
 				list.add(tmp);
 			}
-			System.out.println("------------");
-			System.out.println(list.get(0)[0]+"  "+list.get(0)[1]);
-			System.out.println(list.get(1)[0]+"  "+list.get(1)[1]);
+//			System.out.println("------------");
+//			System.out.println(list.get(0)[0]+"  "+list.get(0)[1]);
+//			System.out.println(list.get(1)[0]+"  "+list.get(1)[1]);
 			
 			return list;
 		
@@ -294,14 +294,14 @@ public class MysqlQueries {
 		return null;
 	}
 	
-	public static void main(String[] args)
-	{
-		MysqlQueries mq = new MysqlQueries();
-		ArrayList<String[]> val = mq.getChildren("0");
-		System.out.println("------------");
-		System.out.println(val.get(0)[0]+"  "+val.get(0)[1]);
-		System.out.println(val.get(1)[0]+"  "+val.get(1)[1]);
-	}
+//	public static void main(String[] args)
+//	{
+//		MysqlQueries mq = new MysqlQueries();
+//		ArrayList<String[]> val = mq.getChildren("0");
+//		System.out.println("------------");
+//		System.out.println(val.get(0)[0]+"  "+val.get(0)[1]);
+//		System.out.println(val.get(1)[0]+"  "+val.get(1)[1]);
+//	}
 	
 	
 }
