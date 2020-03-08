@@ -24,6 +24,9 @@ public class MysqlQueries {
 		}
 	}
 	
+		
+	
+	
 	
 	void insertFile(String fname, String type, String parent, String own, String lvl_from, String lvl_to, String[] dids)
 	{
@@ -148,7 +151,7 @@ public class MysqlQueries {
 		}
 	}
 	
-	public String[] getGroups(String uid)
+	public ArrayList<String> getGroups(String uid)
 	{
 		try {
 			String sql = "select gid from user_groups where uid='"+uid+"'";
@@ -160,8 +163,8 @@ public class MysqlQueries {
 				String gname = myResult.getString("gname");
 				list.add(gname);
 			}
-			String[] groups = (String[])list.toArray();
-			return groups;
+			
+			return list;
 		}
 		catch(Exception e)
 		{
@@ -211,7 +214,7 @@ public class MysqlQueries {
 		
 	}
 	
-	public String[] getUserDomain(String uid)
+	public ArrayList<String> getUserDomain(String uid)
 	{
 		try {
 			String sql = "select did from user_domains where uid='"+uid+"'";
@@ -221,8 +224,8 @@ public class MysqlQueries {
 			{
 				list.add(myResult.getString("did"));
 			}
-			String[] val = (String[]) list.toArray();
-			return val;
+			
+			return list;
 		}
 		catch(Exception e)
 		{
@@ -231,7 +234,7 @@ public class MysqlQueries {
 		return null;
 	}
 
-	public String[] getFileDomain(String fid)
+	public ArrayList<String> getFileDomain(String fid)
 	{
 		try {
 			String sql = "select did from file_domains where fid='"+fid+"'";
@@ -241,8 +244,8 @@ public class MysqlQueries {
 			{
 				list.add(myResult.getString("did"));
 			}
-			String[] val = (String[]) list.toArray();
-			return val;
+			
+			return list;
 		}
 		catch(Exception e)
 		{
@@ -250,6 +253,56 @@ public class MysqlQueries {
 		}
 		return null;
 	}
+	
+	public ArrayList<String[]> getChildren(String fid)
+	{
+		try {
+			String sql = "select type from files_dir where fid='"+fid+"'";
+			ResultSet myResult = myStatement.executeQuery(sql);
+			if(myResult.first())
+			{
+				if(myResult.getString("type").compareTo("f")==0)
+					return null;
+			}
+			else return null;
+			
+			sql = "select fid, type from files_dir where parent='"+fid+"'";
+			ArrayList<String[]> list = new ArrayList<String[]>();
+			String[] tmp = new String[2];
+			myResult = myStatement.executeQuery(sql);
+			while(myResult.next())
+			{
+				tmp[0]= myResult.getString("fid");
+				tmp[1]= myResult.getString("type");
+				System.out.println(tmp[0]+"  "+tmp[1]);
+				list.add(tmp);
+			}
+			System.out.println("------------");
+			System.out.println(list.get(0)[0]+"  "+list.get(0)[1]);
+			System.out.println(list.get(1)[0]+"  "+list.get(1)[1]);
+			
+			return list;
+		
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.toString());
+		}
+		
+		
+		
+		return null;
+	}
+	
+	public static void main(String[] args)
+	{
+		MysqlQueries mq = new MysqlQueries();
+		ArrayList<String[]> val = mq.getChildren("0");
+		System.out.println("------------");
+		System.out.println(val.get(0)[0]+"  "+val.get(0)[1]);
+		System.out.println(val.get(1)[0]+"  "+val.get(1)[1]);
+	}
+	
 	
 }
 
